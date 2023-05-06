@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CheatTable CheatEngineTableVersion="42">
+  <CheatEntries>
+    <CheatEntry>
+      <ID>2</ID>
+      <Description>"&lt;-- Enable this script before loading save"</Description>
+      <VariableType>Auto Assembler Script</VariableType>
+      <AssemblerScript>{ Game   : Gladius.exe
+  Version: 
+  Date   : 2023-05-06
+  Author : Matt (ProphetofDinkan)
+
+  Simple script for the main resources.
+}
+
+[ENABLE]
+
+
+aobscanmodule(INJECT,Gladius.exe,48 89 45 58 49 8B 8D A0 01 00 00) // should be unique
+alloc(newmem,$1000,INJECT)
+
+label(code)
+label(return)
+label(MATTRESADDR)
+registersymbol(MATTRESADDR)
+
+//new allocation
+newmem:
+
+code:
+  mov [rbp+58],rax
+  push r15
+  mov r15, [rax+328]
+  mov [MATTRESADDR], r15
+  pop r15
+  mov rcx,[r13+000001A0]
+  jmp return
+
+MATTRESADDR:
+  dd 0
+  dd 0
+
+//original location
+INJECT:
+  jmp newmem
+  nop 6
+return:
+registersymbol(INJECT)
+
+[DISABLE]
+
+INJECT:
+  db 48 89 45 58 49 8B 8D A0 01 00 00
+
+unregistersymbol(INJECT)
+dealloc(newmem)
+
+{
+// ORIGINAL CODE - INJECTION POINT: Gladius.exe+AB481
+
+Gladius.exe+AB44E: 48 8B 88 68 03 00 00     - mov rcx,[rax+00000368]
+Gladius.exe+AB455: E8 86 7B 06 00           - call Gladius.gladius::gui::world::SelectionController::cancelSelectTarget
+Gladius.exe+AB45A: 49 8B 9C 24 18 04 00 00  - mov rbx,[r12+00000418]
+Gladius.exe+AB462: 48 8B 4F 10              - mov rcx,[rdi+10]
+Gladius.exe+AB466: 48 81 C1 48 01 00 00     - add rcx,00000148
+Gladius.exe+AB46D: 41 8D 56 0A              - lea edx,[r14+0A]
+Gladius.exe+AB471: E8 8A D3 51 00           - call Gladius.proxy::core::toUnsignedInt
+Gladius.exe+AB476: 8B D0                    - mov edx,eax
+Gladius.exe+AB478: 48 8D 4B 08              - lea rcx,[rbx+08]
+Gladius.exe+AB47C: E8 8F E5 FF FF           - call Gladius.proxy::core::EntityManager&lt;gladius::world::Player&gt;::get
+// ---------- INJECTING HERE ----------
+Gladius.exe+AB481: 48 89 45 58              - mov [rbp+58],rax
+// ---------- DONE INJECTING  ----------
+Gladius.exe+AB485: 49 8B 8D A0 01 00 00     - mov rcx,[r13+000001A0]
+Gladius.exe+AB48C: E8 BF F1 0A 00           - call Gladius.proxy::gui::DropList::clearItems
+Gladius.exe+AB491: 49 8B 4C 24 48           - mov rcx,[r12+48]
+Gladius.exe+AB496: 4C 8B B9 A0 00 00 00     - mov r15,[rcx+000000A0]
+Gladius.exe+AB49D: 48 8B 81 A8 00 00 00     - mov rax,[rcx+000000A8]
+Gladius.exe+AB4A4: 48 89 45 F8              - mov [rbp-08],rax
+Gladius.exe+AB4A8: 4C 3B F8                 - cmp r15,rax
+Gladius.exe+AB4AB: 4C 89 7D 50              - mov [rbp+50],r15
+Gladius.exe+AB4AF: 0F 84 1F 08 00 00        - je Gladius.exe+ABCD4
+Gladius.exe+AB4B5: 49 8B B4 24 A0 00 00 00  - mov rsi,[r12+000000A0]
+}
+</AssemblerScript>
+      <CheatEntries>
+        <CheatEntry>
+          <ID>4</ID>
+          <Description>"Requisitions"</Description>
+          <ShowAsSigned>0</ShowAsSigned>
+          <VariableType>Double</VariableType>
+          <Address>MATTRESADDR</Address>
+          <Offsets>
+            <Offset>418</Offset>
+          </Offsets>
+        </CheatEntry>
+        <CheatEntry>
+          <ID>3</ID>
+          <Description>"Energy"</Description>
+          <ShowAsSigned>0</ShowAsSigned>
+          <VariableType>Double</VariableType>
+          <Address>MATTRESADDR</Address>
+          <Offsets>
+            <Offset>388</Offset>
+          </Offsets>
+        </CheatEntry>
+        <CheatEntry>
+          <ID>6</ID>
+          <Description>"Research"</Description>
+          <ShowAsSigned>0</ShowAsSigned>
+          <VariableType>Double</VariableType>
+          <Address>MATTRESADDR</Address>
+          <Offsets>
+            <Offset>428</Offset>
+          </Offsets>
+        </CheatEntry>
+        <CheatEntry>
+          <ID>5</ID>
+          <Description>"Influence"</Description>
+          <ShowAsSigned>0</ShowAsSigned>
+          <VariableType>Double</VariableType>
+          <Address>MATTRESADDR</Address>
+          <Offsets>
+            <Offset>3e8</Offset>
+          </Offsets>
+        </CheatEntry>
+      </CheatEntries>
+    </CheatEntry>
+  </CheatEntries>
+  <UserdefinedSymbols/>
+</CheatTable>
